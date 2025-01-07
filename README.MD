@@ -9,6 +9,7 @@ This project is a backend API for an online Cloud-hosted Live Social Media appli
 - Create and retrieve users.
 - Post, retrieve, like, unlike, and reply to tweets.
 - Interact with the application in real-time via SignalR websockets.
+- Hosted on Azure Cloud for Database and Backend.
 - Frontend features: User Login, Tweet Home Page, Weather API integration.
 
 ## External API
