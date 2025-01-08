@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.SignalR;
 using Moq;
 using SocialMedia.API.DTO;
+using SocialMedia.API.Hubs;
 using SocialMedia.API.Model;
 using SocialMedia.API.Repo;
 using SocialMedia.API.Service;
@@ -10,13 +12,19 @@ public class ServiceTests
 {
     private readonly Mock<IUserRepo> _mockUserRepo = new();
     private readonly Mock<ITweetRepo> _mockTweetRepo = new();
+    private readonly Mock<IHubContext<SocialMediaHub>> _mockHubContext = new();
     private readonly UserService _userService;
     private readonly TweetService _tweetService;
+    private readonly IHubContext<SocialMediaHub> _hubContext;
 
     public ServiceTests()
     {
         _userService = new UserService(_mockUserRepo.Object);
-        _tweetService = new TweetService(_mockTweetRepo.Object, _mockUserRepo.Object);
+        _tweetService = new TweetService(
+            _mockTweetRepo.Object,
+            _mockUserRepo.Object,
+            _mockHubContext.Object
+        );
     }
 
     [Fact]
