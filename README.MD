@@ -14,7 +14,7 @@ This project is a backend API for an online Cloud-hosted Live Social Media appli
 
 ## External API
 
-Weather API
+MyMemory API - Assisted with franc and iso-693-3-to-1
 
 ## Project Management
 
