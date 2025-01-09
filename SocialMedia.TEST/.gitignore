@@ -1,0 +1,5 @@
+coveragereport/
+
+ServiceTest.cs
+
+IgnoreHubContext.cs
