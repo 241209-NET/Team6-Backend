@@ -11,41 +11,41 @@ public class UserService : IUserService
 
     public UserService(IUserRepo userRepo) => _userRepo = userRepo;
 
-    public User CreateUser(UserInDTO newUser)
+    public async Task<User> CreateUser(UserInDTO newUser)
     {
         User fromDTO = Utilities.UserDTOToObject(newUser);
 
-        return _userRepo.CreateUser(fromDTO);
+        return await _userRepo.CreateUser(fromDTO);
     }
 
-    public IEnumerable<User> GetAllUsers()
+    public async Task<IEnumerable<User>> GetAllUsers()
     {
-        return _userRepo.GetAllUsers();
+        return await _userRepo.GetAllUsers();
     }
 
-    public User? GetUserById(int id)
+    public async Task<User>? GetUserById(int id)
     {
         var foundUser =
-            _userRepo.GetUserById(id)
+            await _userRepo.GetUserById(id)!
             ?? throw new ArgumentException($"User with ID {id} not found.");
         return foundUser;
     }
 
-    public User? GetUserByUsername(string username)
+    public async Task<User>? GetUserByUsername(string username)
     {
         if (string.IsNullOrWhiteSpace(username))
         {
             throw new ArgumentException("Username cannot be null or empty.", nameof(username));
         }
         var foundUser =
-            _userRepo.GetUserByUsername(username)
+            await _userRepo.GetUserByUsername(username)!
             ?? throw new InvalidOperationException($"User with username '{username}' not found.");
         return foundUser;
     }
 
-    public User? DeleteUserById(int id)
+    public async Task<User>? DeleteUserById(int id)
     {
-        var deletedUser = _userRepo.DeleteUserById(id);
+        var deletedUser = await _userRepo.DeleteUserById(id)!;
         return deletedUser;
     }
 }

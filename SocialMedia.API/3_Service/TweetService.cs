@@ -24,7 +24,7 @@ public class TweetService : ITweetService
         _hubContext = hubContext;
     }
 
-    public Tweet CreateTweet(TweetInDTO tweetDTO)
+    public async Task<Tweet> CreateTweet(TweetInDTO tweetDTO)
     {
         if (tweetDTO == null)
         {
@@ -40,7 +40,7 @@ public class TweetService : ITweetService
 
         if (newTweet.ParentId.HasValue)
         {
-            var parentTweet = _tweetRepo.GetTweetById(newTweet.ParentId.Value);
+            var parentTweet = await _tweetRepo.GetTweetById(newTweet.ParentId.Value)!;
             if (parentTweet == null)
             {
                 throw new ArgumentException(
@@ -49,7 +49,7 @@ public class TweetService : ITweetService
             }
         }
 
-        var user = _userRepo.GetUserById(newTweet.UserId);
+        var user = await _userRepo.GetUserById(newTweet.UserId)!;
         if (user == null)
         {
             throw new ArgumentException($"User with ID {newTweet.UserId} does not exist.");
@@ -59,17 +59,17 @@ public class TweetService : ITweetService
         newTweet.CreatedAt = DateTime.UtcNow;
         newTweet.Likes = 0;
 
-        var createdTweet = _tweetRepo.CreateTweet(newTweet);
+        var createdTweet = await _tweetRepo.CreateTweet(newTweet);
 
         // Notify clients in real time
-        _hubContext.Clients.All.SendAsync("ReceiveTweet", createdTweet);
+        await _hubContext.Clients.All.SendAsync("ReceiveTweet", createdTweet);
 
         return createdTweet;
     }
 
-    public Tweet GetTweetById(int id)
+    public async Task<Tweet> GetTweetById(int id)
     {
-        var tweet = _tweetRepo.GetTweetById(id);
+        var tweet = await _tweetRepo.GetTweetById(id)!;
         if (tweet == null)
         {
             throw new ArgumentException($"Tweet with ID {id} does not exist.");
@@ -78,9 +78,9 @@ public class TweetService : ITweetService
         return tweet;
     }
 
-    public IEnumerable<Tweet> GetAllTweets()
+    public async Task<IEnumerable<Tweet>> GetAllTweets()
     {
-        var tweets = _tweetRepo.GetAllTweets();
+        var tweets = await _tweetRepo.GetAllTweets();
         if (!tweets.Any())
         {
             throw new ArgumentException("No tweets found.");
@@ -89,14 +89,14 @@ public class TweetService : ITweetService
         return tweets;
     }
 
-    public IEnumerable<Tweet> GetTweetsByUserId(int userId)
+    public async Task<IEnumerable<Tweet>> GetTweetsByUserId(int userId)
     {
         if (userId <= 0)
         {
             throw new ArgumentException("User ID must be greater than 0.");
         }
 
-        var tweets = _tweetRepo.GetTweetsByUserId(userId);
+        var tweets = await _tweetRepo.GetTweetsByUserId(userId);
         if (!tweets.Any())
         {
             throw new ArgumentException($"No tweets found for user with ID {userId}.");
@@ -105,20 +105,20 @@ public class TweetService : ITweetService
         return tweets;
     }
 
-    public Tweet UpdateTweet(int tweetId, string newBody)
+    public async Task<Tweet> UpdateTweet(int tweetId, string newBody)
     {
         if (string.IsNullOrWhiteSpace(newBody))
         {
             throw new ArgumentException("Tweet body cannot be null or empty.");
         }
 
-        var tweet = _tweetRepo.GetTweetById(tweetId);
+        var tweet = await _tweetRepo.GetTweetById(tweetId)!;
         if (tweet == null)
         {
             throw new ArgumentException($"Tweet with ID {tweetId} does not exist.");
         }
 
-        var updatedTweet = _tweetRepo.UpdateTweet(tweetId, newBody);
+        var updatedTweet = await _tweetRepo.UpdateTweet(tweetId, newBody)!;
         if (updatedTweet == null)
         {
             throw new ArgumentException(
@@ -127,30 +127,34 @@ public class TweetService : ITweetService
         }
 
         // Notify clients in real time
-        _hubContext.Clients.All.SendAsync("UpdateTweet", updatedTweet);
+        await _hubContext.Clients.All.SendAsync("UpdateTweet", updatedTweet);
 
         return updatedTweet;
     }
 
-    public bool LikeTweet(int tweetId)
+    public async Task<bool> LikeTweet(int tweetId)
     {
-        var tweet = _tweetRepo.GetTweetById(tweetId);
+        var tweet = await _tweetRepo.GetTweetById(tweetId)!;
         if (tweet == null)
         {
             throw new ArgumentException($"Tweet with ID {tweetId} does not exist.");
         }
 
-        var result = _tweetRepo.LikeTweet(tweetId);
+        var result = await _tweetRepo.LikeTweet(tweetId);
 
         // Notify clients in real time
+<<<<<<< HEAD
         //_hubContext.Clients.All.SendAsync("LikeTweet", tweet);
+=======
+        await _hubContext.Clients.All.SendAsync("LikeTweet", tweetId);
+>>>>>>> 89ca67c0edcce20c79d7354bc4c8f3f84c516e86
 
         return result;
     }
 
-    public bool UnlikeTweet(int tweetId)
+    public async Task<bool> UnlikeTweet(int tweetId)
     {
-        var tweet = _tweetRepo.GetTweetById(tweetId);
+        var tweet = await _tweetRepo.GetTweetById(tweetId)!;
         if (tweet == null)
         {
             throw new ArgumentException($"Tweet with ID {tweetId} does not exist.");
@@ -163,39 +167,43 @@ public class TweetService : ITweetService
             );
         }
 
-        var result = _tweetRepo.UnlikeTweet(tweetId);
+        var result = await _tweetRepo.UnlikeTweet(tweetId);
 
         // Notify clients in real time
+<<<<<<< HEAD
         //_hubContext.Clients.All.SendAsync("UnlikeTweet", tweetId);
+=======
+        await _hubContext.Clients.All.SendAsync("UnlikeTweet", tweetId);
+>>>>>>> 89ca67c0edcce20c79d7354bc4c8f3f84c516e86
 
         return result;
     }
 
-    public bool DeleteTweet(int tweetId)
+    public async Task<bool> DeleteTweet(int tweetId)
     {
-        var tweet = _tweetRepo.GetTweetById(tweetId);
+        var tweet = await _tweetRepo.GetTweetById(tweetId)!;
         if (tweet == null)
         {
             throw new ArgumentException($"Tweet with ID {tweetId} does not exist.");
         }
 
-        var result = _tweetRepo.DeleteTweet(tweetId);
+        var result = await _tweetRepo.DeleteTweet(tweetId)!;
 
         // Notify clients in real time
-        _hubContext.Clients.All.SendAsync("DeleteTweet", tweetId);
+        await _hubContext.Clients.All.SendAsync("DeleteTweet", tweetId);
 
         return result;
     }
 
-    public IEnumerable<Tweet> GetRepliesForTweet(int tweetId)
+    public async Task<IEnumerable<Tweet>> GetRepliesForTweet(int tweetId)
     {
-        var tweet = _tweetRepo.GetTweetById(tweetId);
+        var tweet = await _tweetRepo.GetTweetById(tweetId)!;
         if (tweet == null)
         {
             throw new ArgumentException($"Tweet with ID {tweetId} does not exist.");
         }
 
-        var replies = _tweetRepo.GetRepliesForTweet(tweetId);
+        var replies = await _tweetRepo.GetRepliesForTweet(tweetId);
         if (!replies.Any())
         {
             throw new ArgumentException($"No replies found for tweet with ID {tweetId}.");

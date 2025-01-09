@@ -221,8 +221,13 @@ var assemblies = [
   {
     "name": "SocialMedia.API",
     "classes": [
+<<<<<<< HEAD
       { "name": "SocialMedia.API.Service.TweetService", "rp": "SocialMedia.API_TweetService.html", "cl": 44, "ucl": 76, "cal": 120, "tl": 206, "cb": 10, "tb": 36, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "SocialMedia.API.Service.UserService", "rp": "SocialMedia.API_UserService.html", "cl": 18, "ucl": 9, "cal": 27, "tl": 51, "cb": 1, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+=======
+      { "name": "SocialMedia.API.Service.TweetService", "rp": "SocialMedia.API_TweetService.html", "cl": 111, "ucl": 11, "cal": 122, "tl": 206, "cb": 30, "tb": 36, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "SocialMedia.API.Service.UserService", "rp": "SocialMedia.API_UserService.html", "cl": 27, "ucl": 0, "cal": 27, "tl": 51, "cb": 5, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+>>>>>>> 89ca67c0edcce20c79d7354bc4c8f3f84c516e86
     ]},
 ];
 
@@ -231,11 +236,10 @@ var metrics = [{ "name": "Crap Score", "abbreviation": "crp", "explanationUrl": 
 var historicCoverageExecutionTimes = [];
 
 var riskHotspotMetrics = [
-      { "name": "Crap Score", "explanationUrl": "https://googletesting.blogspot.de/2011/02/this-code-is-crap.html" },
-      { "name": "Cyclomatic complexity", "explanationUrl": "https://en.wikipedia.org/wiki/Cyclomatic_complexity" },
 ];
 
 var riskHotspots = [
+<<<<<<< HEAD
   {
     "assembly": "SocialMedia.API", "class": "SocialMedia.API.Service.TweetService", "reportPath": "SocialMedia.API_TweetService.html", "methodName": "UpdateTweet(System.Int32,System.String)", "methodShortName": "UpdateTweet(...)", "fileIndex": 0, "line": 109,
     "metrics": [
@@ -248,6 +252,8 @@ var riskHotspots = [
       { "value": 32, "exceeded": true },
       { "value": 10, "exceeded": false },
     ]},
+=======
+>>>>>>> 89ca67c0edcce20c79d7354bc4c8f3f84c516e86
 ];
 
 var branchCoverageAvailable = true;

@@ -1,4 +1,5 @@
 #nullable disable
+using Microsoft.EntityFrameworkCore;
 using SocialMedia.API.Data;
 using SocialMedia.API.Model;
 
@@ -11,33 +12,34 @@ public class UserRepo : IUserRepo
     public UserRepo(SocialMediaContext SocialMediaContext) =>
         _SocialMediaContext = SocialMediaContext;
 
-    public User CreateUser(User newUser)
+    public async Task<User> CreateUser(User newUser)
     {
-        _SocialMediaContext.Users.Add(newUser);
-        _SocialMediaContext.SaveChanges();
+        await _SocialMediaContext.Users.AddAsync(newUser);
+        await _SocialMediaContext.SaveChangesAsync();
         return newUser;
     }
 
-    public IEnumerable<User> GetAllUsers()
+    public async Task<IEnumerable<User>> GetAllUsers()
     {
-        return _SocialMediaContext.Users.ToList();
+        return await _SocialMediaContext.Users.ToListAsync();
     }
 
-    public User GetUserById(int id)
+    public async Task<User> GetUserById(int id)
     {
-        return _SocialMediaContext.Users.Find(id);
+        return await _SocialMediaContext.Users.FindAsync(id);
     }
 
-    public User GetUserByUsername(string username)
+    public async Task<User> GetUserByUsername(string username)
     {
-        return _SocialMediaContext.Users.FirstOrDefault(u => u.Username == username);
+        return await _SocialMediaContext.Users.FirstOrDefaultAsync(u => u.Username == username);
     }
 
-    public User DeleteUserById(int id)
+    public async Task<User> DeleteUserById(int id)
     {
-        var user = GetUserById(id) ?? throw new ArgumentException($"User with ID {id} not found.");
+        var user =
+            await GetUserById(id) ?? throw new ArgumentException($"User with ID {id} not found.");
         _SocialMediaContext.Users.Remove(user);
-        _SocialMediaContext.SaveChanges();
+        await _SocialMediaContext.SaveChangesAsync();
         return user;
     }
 }

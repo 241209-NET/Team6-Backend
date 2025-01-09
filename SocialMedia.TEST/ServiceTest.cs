@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.SignalR;
 using Moq;
 using SocialMedia.API.DTO;
+using SocialMedia.API.Hubs;
 using SocialMedia.API.Model;
 using SocialMedia.API.Repo;
 using SocialMedia.API.Service;
@@ -12,14 +13,20 @@ public class ServiceTests
 {
     private readonly Mock<IUserRepo> _mockUserRepo = new();
     private readonly Mock<ITweetRepo> _mockTweetRepo = new();
+    private readonly Mock<IHubContext<SocialMediaHub>> _mockHubContext = new();
     private readonly UserService _userService;
     private readonly TweetService _tweetService;
+<<<<<<< HEAD
     private readonly Mock<IHubContext<SocialMediaHub>> _mockHubContext = new();
     private readonly IHubContext<SocialMediaHub> _HubContext;
+=======
+    private readonly IHubContext<SocialMediaHub> _hubContext;
+>>>>>>> 89ca67c0edcce20c79d7354bc4c8f3f84c516e86
 
     public ServiceTests()
     {
         _userService = new UserService(_mockUserRepo.Object);
+<<<<<<< HEAD
         _tweetService = new TweetService(_mockTweetRepo.Object, _mockUserRepo.Object, _mockHubContext.Object);
 
     }
@@ -136,6 +143,13 @@ public class ServiceTests
         
         Assert.Equal("Parent tweet with ID 1 does not exist.", result.Message);
         
+=======
+        _tweetService = new TweetService(
+            _mockTweetRepo.Object,
+            _mockUserRepo.Object,
+            _mockHubContext.Object
+        );
+>>>>>>> 89ca67c0edcce20c79d7354bc4c8f3f84c516e86
     }
 
     [Fact]
