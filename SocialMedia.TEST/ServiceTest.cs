@@ -162,7 +162,8 @@ public class ServiceTests
             Id = 1,
             Username = "testUser",
             Password = "password123",
-        };
+        }; 
+        
 
         _mockUserRepo.Setup(repo => repo.CreateUser(It.IsAny<User>())).Returns(newUser);
 
