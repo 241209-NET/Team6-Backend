@@ -12,67 +12,67 @@ public class TweetRepo : ITweetRepo
     public TweetRepo(SocialMediaContext SocialMediaContext) =>
         _SocialMediaContext = SocialMediaContext;
 
-    public Tweet CreateTweet(Tweet newTweet)
+    public async Task<Tweet> CreateTweet(Tweet newTweet)
     {
-        _SocialMediaContext.Tweets.Add(newTweet);
-        _SocialMediaContext.SaveChanges();
+        await _SocialMediaContext.Tweets.AddAsync(newTweet);
+        await _SocialMediaContext.SaveChangesAsync();
         return newTweet;
     }
 
-    public Tweet GetTweetById(int id)
+    public async Task<Tweet> GetTweetById(int id)
     {
-        return _SocialMediaContext.Tweets.Find(id);
+        return await _SocialMediaContext.Tweets.FindAsync(id);
     }
 
-    public IEnumerable<Tweet> GetAllTweets()
+    public async Task<IEnumerable<Tweet>> GetAllTweets()
     {
-        return _SocialMediaContext
+        return await _SocialMediaContext
             .Tweets.Include(t => t.User)
             .OrderByDescending(t => t.CreatedAt)
-            .ToList();
+            .ToListAsync();
     }
 
-    public IEnumerable<Tweet> GetTweetsByUserId(int userId)
+    public async Task<IEnumerable<Tweet>> GetTweetsByUserId(int userId)
     {
-        return _SocialMediaContext.Tweets.Where(t => t.UserId == userId).ToList();
+        return await _SocialMediaContext.Tweets.Where(t => t.UserId == userId).ToListAsync();
     }
 
-    public Tweet UpdateTweet(int id, string newBody)
+    public async Task<Tweet> UpdateTweet(int id, string newBody)
     {
-        var tweet = _SocialMediaContext
+        var tweet = await _SocialMediaContext
             .Tweets.Include(t => t.User) // including user for update as well
-            .FirstOrDefault(t => t.Id == id);
+            .FirstOrDefaultAsync(t => t.Id == id);
         tweet.Body = newBody;
-        _SocialMediaContext.SaveChanges();
+        await _SocialMediaContext.SaveChangesAsync();
         return tweet;
     }
 
-    public bool LikeTweet(int id)
+    public async Task<bool> LikeTweet(int id)
     {
-        var tweet = _SocialMediaContext.Tweets.Find(id);
+        var tweet = await _SocialMediaContext.Tweets.FindAsync(id);
         tweet.Likes++;
-        _SocialMediaContext.SaveChanges();
+        await _SocialMediaContext.SaveChangesAsync();
         return true;
     }
 
-    public bool UnlikeTweet(int id)
+    public async Task<bool> UnlikeTweet(int id)
     {
-        var tweet = _SocialMediaContext.Tweets.Find(id);
+        var tweet = await _SocialMediaContext.Tweets.FindAsync(id);
         tweet.Likes--;
-        _SocialMediaContext.SaveChanges();
+        await _SocialMediaContext.SaveChangesAsync();
         return true;
     }
 
-    public bool DeleteTweet(int id)
+    public async Task<bool> DeleteTweet(int id)
     {
-        var tweet = _SocialMediaContext.Tweets.Find(id);
+        var tweet = await _SocialMediaContext.Tweets.FindAsync(id);
         _SocialMediaContext.Tweets.Remove(tweet);
-        _SocialMediaContext.SaveChanges();
+        await _SocialMediaContext.SaveChangesAsync();
         return true;
     }
 
-    public IEnumerable<Tweet> GetRepliesForTweet(int tweetId)
+    public async Task<IEnumerable<Tweet>> GetRepliesForTweet(int tweetId)
     {
-        return _SocialMediaContext.Tweets.Where(t => t.ParentId == tweetId).ToList();
+        return await _SocialMediaContext.Tweets.Where(t => t.ParentId == tweetId).ToListAsync();
     }
 }

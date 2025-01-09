@@ -18,7 +18,7 @@ public class UserController : ControllerBase
 
     // POST: api/User
     [HttpPost]
-    public IActionResult CreateUser(UserInDTO newUser)
+    public async Task<IActionResult> CreateUser(UserInDTO newUser)
     {
         if (newUser == null)
         {
@@ -27,7 +27,7 @@ public class UserController : ControllerBase
 
         try
         {
-            var createdUser = _userService.CreateUser(newUser);
+            var createdUser = await _userService.CreateUser(newUser);
             return Ok(createdUser);
         }
         catch (Exception ex)
@@ -38,11 +38,11 @@ public class UserController : ControllerBase
 
     // GET: api/User
     [HttpGet]
-    public IActionResult GetAllUsers()
+    public async Task<IActionResult> GetAllUsers()
     {
         try
         {
-            var users = _userService.GetAllUsers();
+            var users = await _userService.GetAllUsers();
             return Ok(users);
         }
         catch (Exception ex)
@@ -53,11 +53,11 @@ public class UserController : ControllerBase
 
     // GET: api/User/{id}
     [HttpGet("{id}")]
-    public IActionResult GetUserById(int id)
+    public async Task<IActionResult> GetUserById(int id)
     {
         try
         {
-            var user = _userService.GetUserById(id);
+            var user = await _userService.GetUserById(id)!;
             return Ok(user);
         }
         catch (ArgumentException ex)
@@ -68,7 +68,7 @@ public class UserController : ControllerBase
 
     // GET: api/User/username/{username}
     [HttpGet("username/{username}")]
-    public IActionResult GetUserByUsername(string username)
+    public async Task<IActionResult> GetUserByUsername(string username)
     {
         if (string.IsNullOrWhiteSpace(username))
         {
@@ -77,7 +77,7 @@ public class UserController : ControllerBase
 
         try
         {
-            var user = _userService.GetUserByUsername(username);
+            var user = await _userService.GetUserByUsername(username)!;
             return Ok(user);
         }
         catch (InvalidOperationException ex)
@@ -92,11 +92,11 @@ public class UserController : ControllerBase
 
     // DELETE: api/User/{id}
     [HttpDelete("{id}")]
-    public IActionResult DeleteUserById(int id)
+    public async Task<IActionResult> DeleteUserById(int id)
     {
         try
         {
-            var deletedUser = _userService.DeleteUserById(id);
+            var deletedUser = await _userService.DeleteUserById(id)!;
             return Ok(deletedUser);
         }
         catch (ArgumentException ex)
@@ -107,13 +107,13 @@ public class UserController : ControllerBase
 
     // POST: api/User/login
     [HttpPost("login")]
-    public IActionResult Login([FromBody] UserInDTO userDto)
+    public async Task<IActionResult> Login([FromBody] UserInDTO userDto)
     {
         if (string.IsNullOrWhiteSpace(userDto.Username))
             return BadRequest("Username cannot be empty.");
 
         // 1) Look up user by username
-        var user = _userService.GetUserByUsername(userDto.Username);
+        var user = await _userService.GetUserByUsername(userDto.Username)!;
         if (user == null)
             return NotFound("User not found.");
 

@@ -18,11 +18,11 @@ public class TweetController : ControllerBase
 
     // GET: api/Tweet
     [HttpGet]
-    public IActionResult GetAllTweets()
+    public async Task<IActionResult> GetAllTweets()
     {
         try
         {
-            var tweets = _tweetService.GetAllTweets();
+            var tweets = await _tweetService.GetAllTweets();
             return Ok(tweets);
         }
         catch (ArgumentException ex)
@@ -33,11 +33,11 @@ public class TweetController : ControllerBase
 
     // POST: api/Tweet
     [HttpPost]
-    public IActionResult CreateTweet(TweetInDTO newTweet)
+    public async Task<IActionResult> CreateTweet(TweetInDTO newTweet)
     {
         try
         {
-            var createdTweet = _tweetService.CreateTweet(newTweet);
+            var createdTweet = await _tweetService.CreateTweet(newTweet);
             return CreatedAtAction(
                 nameof(GetTweetById),
                 new { id = createdTweet.Id },
@@ -52,11 +52,11 @@ public class TweetController : ControllerBase
 
     // GET: api/Tweet/{id}
     [HttpGet("{id}")]
-    public IActionResult GetTweetById(int id)
+    public async Task<IActionResult> GetTweetById(int id)
     {
         try
         {
-            var tweet = _tweetService.GetTweetById(id);
+            var tweet = await _tweetService.GetTweetById(id)!;
             return Ok(tweet);
         }
         catch (ArgumentException ex)
@@ -67,11 +67,11 @@ public class TweetController : ControllerBase
 
     // GET: api/Tweet/User/{userId}
     [HttpGet("User/{userId}")]
-    public IActionResult GetTweetsByUserId(int userId)
+    public async Task<IActionResult> GetTweetsByUserId(int userId)
     {
         try
         {
-            var tweets = _tweetService.GetTweetsByUserId(userId);
+            var tweets = await _tweetService.GetTweetsByUserId(userId);
             return Ok(tweets);
         }
         catch (ArgumentException ex)
@@ -82,11 +82,11 @@ public class TweetController : ControllerBase
 
     // PUT: api/Tweet/{id}
     [HttpPut("{id}")]
-    public IActionResult UpdateTweet(int id, string newBody)
+    public async Task<IActionResult> UpdateTweet(int id, string newBody)
     {
         try
         {
-            var updatedTweet = _tweetService.UpdateTweet(id, newBody);
+            var updatedTweet = await _tweetService.UpdateTweet(id, newBody)!;
             return Ok(updatedTweet);
         }
         catch (ArgumentException ex)
@@ -97,11 +97,11 @@ public class TweetController : ControllerBase
 
     // POST: api/Tweet/{id}/Like
     [HttpPost("{id}/Like")]
-    public IActionResult LikeTweet(int id)
+    public async Task<IActionResult> LikeTweet(int id)
     {
         try
         {
-            var result = _tweetService.LikeTweet(id);
+            var result = await _tweetService.LikeTweet(id);
             return Ok(new { success = result });
         }
         catch (ArgumentException ex)
@@ -112,11 +112,11 @@ public class TweetController : ControllerBase
 
     // POST: api/Tweet/{id}/Unlike
     [HttpPost("{id}/Unlike")]
-    public IActionResult UnlikeTweet(int id)
+    public async Task<IActionResult> UnlikeTweet(int id)
     {
         try
         {
-            var result = _tweetService.UnlikeTweet(id);
+            var result = await _tweetService.UnlikeTweet(id);
             return Ok(new { success = result });
         }
         catch (ArgumentException ex)
@@ -131,11 +131,11 @@ public class TweetController : ControllerBase
 
     // DELETE: api/Tweet/{id}
     [HttpDelete("{id}")]
-    public IActionResult DeleteTweet(int id)
+    public async Task<IActionResult> DeleteTweet(int id)
     {
         try
         {
-            var result = _tweetService.DeleteTweet(id);
+            var result = await _tweetService.DeleteTweet(id);
             return Ok(new { success = result });
         }
         catch (ArgumentException ex)
@@ -146,11 +146,11 @@ public class TweetController : ControllerBase
 
     // GET: api/Tweet/{id}/Replies
     [HttpGet("{id}/Replies")]
-    public IActionResult GetRepliesForTweet(int id)
+    public async Task<IActionResult> GetRepliesForTweet(int id)
     {
         try
         {
-            var replies = _tweetService.GetRepliesForTweet(id);
+            var replies = await _tweetService.GetRepliesForTweet(id);
             return Ok(replies);
         }
         catch (ArgumentException ex)

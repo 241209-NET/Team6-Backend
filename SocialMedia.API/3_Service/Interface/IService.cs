@@ -6,22 +6,22 @@ using SocialMedia.API.Model;
 
 public interface IUserService
 {
-    User CreateUser(UserInDTO newUser);
-    IEnumerable<User> GetAllUsers();
-    User? GetUserById(int id);
-    User? GetUserByUsername(string username);
-    User? DeleteUserById(int id);
+    Task<User> CreateUser(UserInDTO newUser);
+    Task<IEnumerable<User>> GetAllUsers();
+    Task<User>? GetUserById(int id);
+    Task<User>? GetUserByUsername(string username);
+    Task<User>? DeleteUserById(int id);
 }
 
 public interface ITweetService
 {
-    Tweet CreateTweet(TweetInDTO newTweet);
-    Tweet? GetTweetById(int id);
-    IEnumerable<Tweet> GetAllTweets();
-    IEnumerable<Tweet> GetTweetsByUserId(int userId);
-    Tweet? UpdateTweet(int id, string newBody);
-    bool LikeTweet(int id);
-    bool UnlikeTweet(int id);
-    bool DeleteTweet(int id);
-    IEnumerable<Tweet> GetRepliesForTweet(int tweetId);
+    Task<Tweet> CreateTweet(TweetInDTO newTweet);
+    Task<Tweet>? GetTweetById(int id);
+    Task<IEnumerable<Tweet>> GetAllTweets();
+    Task<IEnumerable<Tweet>> GetTweetsByUserId(int userId);
+    Task<Tweet>? UpdateTweet(int id, string newBody);
+    Task<bool> LikeTweet(int id);
+    Task<bool> UnlikeTweet(int id);
+    Task<bool> DeleteTweet(int id);
+    Task<IEnumerable<Tweet>> GetRepliesForTweet(int tweetId);
 }
