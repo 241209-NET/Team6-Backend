@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.SignalR;
 using Moq;
 using SocialMedia.API.DTO;
 using SocialMedia.API.Model;
 using SocialMedia.API.Repo;
 using SocialMedia.API.Service;
+using SocialMedia.API.Hubs;
 
 namespace SocialMedia.TEST;
 
@@ -12,11 +14,128 @@ public class ServiceTests
     private readonly Mock<ITweetRepo> _mockTweetRepo = new();
     private readonly UserService _userService;
     private readonly TweetService _tweetService;
+    private readonly Mock<IHubContext<SocialMediaHub>> _mockHubContext = new();
+    private readonly IHubContext<SocialMediaHub> _HubContext;
 
     public ServiceTests()
     {
         _userService = new UserService(_mockUserRepo.Object);
-        _tweetService = new TweetService(_mockTweetRepo.Object, _mockUserRepo.Object);
+        _tweetService = new TweetService(_mockTweetRepo.Object, _mockUserRepo.Object, _mockHubContext.Object);
+
+    }
+    
+    [Fact]
+    public void CreateTweetSuccess()
+    {
+        // Arrange
+        var newUser = new User
+        {
+            Id = 1,
+            Username = "testUser",
+            Password = "password123",
+        };
+        _mockUserRepo.Setup(repo => repo.CreateUser(It.IsAny<User>())).Returns(newUser);
+
+
+        var newTweetDto = new TweetInDTO { UserId = 1, ParentId = null, Body = "Hello World" };
+        var newTweet = new Tweet
+        {
+            UserId = 1, 
+            ParentId = null, 
+            Body = "Hello World"
+            
+        };
+        
+
+
+        _mockTweetRepo.Setup(repo => repo.CreateTweet(It.IsAny<Tweet>())).Returns(newTweet);
+        
+
+        // Act
+        var result = _tweetService.CreateTweet(newTweetDto);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(newTweet.Body, result.Body);
+        _mockTweetRepo.Verify(repo => repo.CreateTweet(It.IsAny<Tweet>()), Times.Once);
+    }
+
+    [Fact]
+    public void CreateTweetNullBodyTest()
+    {
+        // Tests for null body
+        // Arrange
+
+        var newTweetDto = new TweetInDTO { UserId = 1, ParentId = null, Body = "" };
+        var newTweet = new Tweet
+        {
+            UserId = 1, 
+            ParentId = null, 
+            Body = "Hello World"
+            
+        };
+
+        _mockTweetRepo.Setup(repo => repo.CreateTweet(It.IsAny<Tweet>())).Returns(newTweet);        
+
+        // Act
+        var result = Assert.Throws<ArgumentException>(() => _tweetService.CreateTweet(newTweetDto));
+
+        // Assert
+        
+        Assert.Equal("Tweet body cannot be null or empty.", result.Message);
+        
+    }
+
+    [Fact]
+    public void CreateTweetNoParentIdTest()
+    {
+        // Tests for null body
+        // Arrange
+
+        var newTweetDto = new TweetInDTO { UserId = 1, ParentId = 1, Body = "Hello World" };
+        var newTweet = new Tweet
+        {
+            UserId = 1, 
+            ParentId = 1, 
+            Body = "Hello World"
+            
+        };
+
+        _mockTweetRepo.Setup(repo => repo.CreateTweet(It.IsAny<Tweet>())).Returns(newTweet);        
+
+        // Act
+        var result = Assert.Throws<ArgumentException>(() => _tweetService.CreateTweet(newTweetDto));
+
+        // Assert
+        
+        Assert.Equal("Parent tweet with ID 1 does not exist.", result.Message);
+        
+    }
+
+    [Fact]
+    public void CreateTweetNullDTOTest()
+    {
+        // Tests for null body
+        // Arrange
+
+        var newTweetDto = new TweetInDTO {}; 
+        var newTweet = new Tweet
+        {
+            UserId = 1, 
+            ParentId = 1, 
+            Body = "Hello World"
+            
+        };
+
+        _mockTweetRepo.Setup(repo => repo.CreateTweet(It.IsAny<Tweet>())).Returns(newTweet);        
+
+        // Act
+        var result = Assert.Throws<ArgumentException>(() => _tweetService.CreateTweet(null));
+
+        // Assert
+        
+        Assert.Equal("Parent tweet with ID 1 does not exist.", result.Message);
+        
     }
 
     [Fact]

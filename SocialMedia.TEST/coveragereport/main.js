@@ -221,7 +221,7 @@ var assemblies = [
   {
     "name": "SocialMedia.API",
     "classes": [
-      { "name": "SocialMedia.API.Service.TweetService", "rp": "SocialMedia.API_TweetService.html", "cl": 26, "ucl": 76, "cal": 102, "tl": 167, "cb": 5, "tb": 34, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "SocialMedia.API.Service.TweetService", "rp": "SocialMedia.API_TweetService.html", "cl": 44, "ucl": 76, "cal": 120, "tl": 206, "cb": 10, "tb": 36, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "SocialMedia.API.Service.UserService", "rp": "SocialMedia.API_UserService.html", "cl": 18, "ucl": 9, "cal": 27, "tl": 51, "cb": 1, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
 ];
@@ -237,9 +237,15 @@ var riskHotspotMetrics = [
 
 var riskHotspots = [
   {
-    "assembly": "SocialMedia.API", "class": "SocialMedia.API.Service.TweetService", "reportPath": "SocialMedia.API_TweetService.html", "methodName": "CreateTweet(SocialMedia.API.DTO.TweetInDTO)", "methodShortName": "CreateTweet(...)", "fileIndex": 0, "line": 20,
+    "assembly": "SocialMedia.API", "class": "SocialMedia.API.Service.TweetService", "reportPath": "SocialMedia.API_TweetService.html", "methodName": "UpdateTweet(System.Int32,System.String)", "methodShortName": "UpdateTweet(...)", "fileIndex": 0, "line": 109,
     "metrics": [
-      { "value": 110, "exceeded": true },
+      { "value": 42, "exceeded": true },
+      { "value": 6, "exceeded": false },
+    ]},
+  {
+    "assembly": "SocialMedia.API", "class": "SocialMedia.API.Service.TweetService", "reportPath": "SocialMedia.API_TweetService.html", "methodName": "CreateTweet(SocialMedia.API.DTO.TweetInDTO)", "methodShortName": "CreateTweet(...)", "fileIndex": 0, "line": 28,
+    "metrics": [
+      { "value": 32, "exceeded": true },
       { "value": 10, "exceeded": false },
     ]},
 ];
