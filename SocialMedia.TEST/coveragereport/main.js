@@ -221,8 +221,8 @@ var assemblies = [
   {
     "name": "SocialMedia.API",
     "classes": [
-      { "name": "SocialMedia.API.Service.TweetService", "rp": "SocialMedia.API_TweetService.html", "cl": 26, "ucl": 76, "cal": 102, "tl": 167, "cb": 5, "tb": 34, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "SocialMedia.API.Service.UserService", "rp": "SocialMedia.API_UserService.html", "cl": 18, "ucl": 9, "cal": 27, "tl": 51, "cb": 1, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "SocialMedia.API.Service.TweetService", "rp": "SocialMedia.API_TweetService.html", "cl": 111, "ucl": 11, "cal": 122, "tl": 206, "cb": 30, "tb": 36, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "SocialMedia.API.Service.UserService", "rp": "SocialMedia.API_UserService.html", "cl": 27, "ucl": 0, "cal": 27, "tl": 51, "cb": 5, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
 ];
 
@@ -231,17 +231,9 @@ var metrics = [{ "name": "Crap Score", "abbreviation": "crp", "explanationUrl": 
 var historicCoverageExecutionTimes = [];
 
 var riskHotspotMetrics = [
-      { "name": "Crap Score", "explanationUrl": "https://googletesting.blogspot.de/2011/02/this-code-is-crap.html" },
-      { "name": "Cyclomatic complexity", "explanationUrl": "https://en.wikipedia.org/wiki/Cyclomatic_complexity" },
 ];
 
 var riskHotspots = [
-  {
-    "assembly": "SocialMedia.API", "class": "SocialMedia.API.Service.TweetService", "reportPath": "SocialMedia.API_TweetService.html", "methodName": "CreateTweet(SocialMedia.API.DTO.TweetInDTO)", "methodShortName": "CreateTweet(...)", "fileIndex": 0, "line": 20,
-    "metrics": [
-      { "value": 110, "exceeded": true },
-      { "value": 10, "exceeded": false },
-    ]},
 ];
 
 var branchCoverageAvailable = true;
