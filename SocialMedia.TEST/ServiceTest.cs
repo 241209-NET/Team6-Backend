@@ -13,26 +13,21 @@ public class ServiceTests
 {
     private readonly Mock<IUserRepo> _mockUserRepo = new();
     private readonly Mock<ITweetRepo> _mockTweetRepo = new();
-    private readonly Mock<IHubContext<SocialMediaHub>> _mockHubContext = new();
+    
     private readonly UserService _userService;
     private readonly TweetService _tweetService;
-<<<<<<< HEAD
-    private readonly Mock<IHubContext<SocialMediaHub>> _mockHubContext = new();
-    private readonly IHubContext<SocialMediaHub> _HubContext;
-=======
-    private readonly IHubContext<SocialMediaHub> _hubContext;
->>>>>>> 89ca67c0edcce20c79d7354bc4c8f3f84c516e86
+    
+    
 
     public ServiceTests()
     {
         _userService = new UserService(_mockUserRepo.Object);
-<<<<<<< HEAD
-        _tweetService = new TweetService(_mockTweetRepo.Object, _mockUserRepo.Object, _mockHubContext.Object);
+        _tweetService = new TweetService(_mockTweetRepo.Object, _mockUserRepo.Object, new NoOpHubContext<SocialMediaHub>());
 
     }
     
     [Fact]
-    public void CreateTweetSuccess()
+    public async Task CreateTweetSuccess()
     {
         // Arrange
         var newUser = new User
@@ -41,7 +36,7 @@ public class ServiceTests
             Username = "testUser",
             Password = "password123",
         };
-        _mockUserRepo.Setup(repo => repo.CreateUser(It.IsAny<User>())).Returns(newUser);
+        _mockUserRepo.Setup(repo => repo.CreateUser(It.IsAny<User>())).ReturnsAsync(newUser);
 
 
         var newTweetDto = new TweetInDTO { UserId = 1, ParentId = null, Body = "Hello World" };
@@ -55,11 +50,11 @@ public class ServiceTests
         
 
 
-        _mockTweetRepo.Setup(repo => repo.CreateTweet(It.IsAny<Tweet>())).Returns(newTweet);
+        _mockTweetRepo.Setup(repo => repo.CreateTweet(It.IsAny<Tweet>())).ReturnsAsync(newTweet);
         
 
         // Act
-        var result = _tweetService.CreateTweet(newTweetDto);
+        var result = await _tweetService.CreateTweet(newTweetDto);
 
         // Assert
         Assert.NotNull(result);
@@ -68,7 +63,7 @@ public class ServiceTests
     }
 
     [Fact]
-    public void CreateTweetNullBodyTest()
+    public async Task CreateTweetNullBodyTest()
     {
         // Tests for null body
         // Arrange
@@ -82,10 +77,10 @@ public class ServiceTests
             
         };
 
-        _mockTweetRepo.Setup(repo => repo.CreateTweet(It.IsAny<Tweet>())).Returns(newTweet);        
+        _mockTweetRepo.Setup(repo => repo.CreateTweet(It.IsAny<Tweet>())).ReturnsAsync(newTweet);        
 
         // Act
-        var result = Assert.Throws<ArgumentException>(() => _tweetService.CreateTweet(newTweetDto));
+        var result = await Assert.ThrowsAsync<ArgumentException>(() => _tweetService.CreateTweet(newTweetDto));
 
         // Assert
         
@@ -94,7 +89,7 @@ public class ServiceTests
     }
 
     [Fact]
-    public void CreateTweetNoParentIdTest()
+    public async Task CreateTweetNoParentIdTest()
     {
         // Tests for null body
         // Arrange
@@ -108,10 +103,10 @@ public class ServiceTests
             
         };
 
-        _mockTweetRepo.Setup(repo => repo.CreateTweet(It.IsAny<Tweet>())).Returns(newTweet);        
+        _mockTweetRepo.Setup(repo => repo.CreateTweet(It.IsAny<Tweet>())).ReturnsAsync(newTweet);        
 
         // Act
-        var result = Assert.Throws<ArgumentException>(() => _tweetService.CreateTweet(newTweetDto));
+        var result = await Assert.ThrowsAsync<ArgumentException>(() => _tweetService.CreateTweet(newTweetDto));
 
         // Assert
         
@@ -120,12 +115,12 @@ public class ServiceTests
     }
 
     [Fact]
-    public void CreateTweetNullDTOTest()
+    public async Task CreateTweetNullDTOTest()
     {
         // Tests for null body
         // Arrange
 
-        var newTweetDto = new TweetInDTO {}; 
+        var newTweetDto = new TweetInDTO {Body = null}; 
         var newTweet = new Tweet
         {
             UserId = 1, 
@@ -134,26 +129,19 @@ public class ServiceTests
             
         };
 
-        _mockTweetRepo.Setup(repo => repo.CreateTweet(It.IsAny<Tweet>())).Returns(newTweet);        
+        _mockTweetRepo.Setup(repo => repo.CreateTweet(It.IsAny<Tweet>())).ReturnsAsync(newTweet);        
 
         // Act
-        var result = Assert.Throws<ArgumentException>(() => _tweetService.CreateTweet(null));
+        var result = await Assert.ThrowsAsync<ArgumentException>(() => _tweetService.CreateTweet(null));
 
         // Assert
         
         Assert.Equal("Parent tweet with ID 1 does not exist.", result.Message);
         
-=======
-        _tweetService = new TweetService(
-            _mockTweetRepo.Object,
-            _mockUserRepo.Object,
-            _mockHubContext.Object
-        );
->>>>>>> 89ca67c0edcce20c79d7354bc4c8f3f84c516e86
     }
 
     [Fact]
-    public void CreateUser_ShouldReturnCreatedUser()
+    public async Task CreateUser_ShouldReturnCreatedUser()
     {
         // Arrange
         var newUserDto = new UserInDTO { Username = "testUser", Password = "password123" };
@@ -165,10 +153,10 @@ public class ServiceTests
         }; 
         
 
-        _mockUserRepo.Setup(repo => repo.CreateUser(It.IsAny<User>())).Returns(newUser);
+        _mockUserRepo.Setup(repo => repo.CreateUser(It.IsAny<User>())).ReturnsAsync(newUser);
 
         // Act
-        var result = _userService.CreateUser(newUserDto);
+        var result = await _userService.CreateUser(newUserDto);
 
         // Assert
         Assert.NotNull(result);
@@ -177,7 +165,7 @@ public class ServiceTests
     }
 
     [Fact]
-    public void GetAllUsers_ReturnAllUsersTest()
+    public async Task GetAllUsers_ReturnAllUsersTest()
     {
         // Arrange
         var users = new List<User>
@@ -196,10 +184,10 @@ public class ServiceTests
             },
         };
 
-        _mockUserRepo.Setup(repo => repo.GetAllUsers()).Returns(users);
+        _mockUserRepo.Setup(repo => repo.GetAllUsers()).ReturnsAsync(users);
 
         // Act
-        var result = _userService.GetAllUsers();
+        var result = await _userService.GetAllUsers();
 
         // Assert
         Assert.NotNull(result);
@@ -208,7 +196,7 @@ public class ServiceTests
     }
 
     [Fact]
-    public void GetUserById_ReturnUserTest()
+    public async Task GetUserById_ReturnUserTest()
     {
         // Arrange
         var user = new User
@@ -218,10 +206,10 @@ public class ServiceTests
             Password = "password123",
         };
 
-        _mockUserRepo.Setup(repo => repo.GetUserById(1)).Returns(user);
+        _mockUserRepo.Setup(repo => repo.GetUserById(1)).ReturnsAsync(user);
 
         // Act
-        var result = _userService.GetUserById(1);
+        var result = await _userService.GetUserById(1);
 
         // Assert
         Assert.NotNull(result);
@@ -230,7 +218,7 @@ public class ServiceTests
     }
 
     [Fact]
-    public void DeleteUserById_ReturnDeletedUserTest()
+    public async Task DeleteUserById_ReturnDeletedUserTest()
     {
         // Arrange
         var user = new User
@@ -240,10 +228,10 @@ public class ServiceTests
             Password = "password123",
         };
 
-        _mockUserRepo.Setup(repo => repo.DeleteUserById(1)).Returns(user);
+        _mockUserRepo.Setup(repo => repo.DeleteUserById(1)).ReturnsAsync(user);
 
         // Act
-        var result = _userService.DeleteUserById(1);
+        var result = await _userService.DeleteUserById(1);
 
         // Assert
         Assert.NotNull(result);
@@ -252,7 +240,7 @@ public class ServiceTests
     }
 
     [Fact]
-    public void GetTweetById_ReturnTweetTest()
+    public async Task GetTweetById_ReturnTweetTest()
     {
         // Arrange
         var tweet = new Tweet
@@ -263,10 +251,10 @@ public class ServiceTests
             UserId = 1,
         };
 
-        _mockTweetRepo.Setup(repo => repo.GetTweetById(1)).Returns(tweet);
+        _mockTweetRepo.Setup(repo => repo.GetTweetById(1)).ReturnsAsync(tweet);
 
         // Act
-        var result = _tweetService.GetTweetById(1);
+        var result = await _tweetService.GetTweetById(1);
 
         // Assert
         Assert.NotNull(result);
@@ -275,7 +263,7 @@ public class ServiceTests
     }
 
     [Fact]
-    public void GetAllTweets_ReturnAllTweetsTest()
+    public async Task GetAllTweets_ReturnAllTweetsTest()
     {
         // Arrange
         var tweets = new List<Tweet>
@@ -296,10 +284,10 @@ public class ServiceTests
             },
         };
 
-        _mockTweetRepo.Setup(repo => repo.GetAllTweets()).Returns(tweets);
+        _mockTweetRepo.Setup(repo => repo.GetAllTweets()).ReturnsAsync(tweets);
 
         // Act
-        var result = _tweetService.GetAllTweets();
+        var result = await _tweetService.GetAllTweets();
 
         // Assert
         Assert.NotNull(result);
@@ -308,7 +296,7 @@ public class ServiceTests
     }
 
     [Fact]
-    public void LikeTweet_IncrementLikesTest()
+    public async Task LikeTweet_IncrementLikesTest()
     {
         // Arrange
         var tweet = new Tweet
@@ -319,11 +307,11 @@ public class ServiceTests
             UserId = 1,
         };
 
-        _mockTweetRepo.Setup(repo => repo.GetTweetById(1)).Returns(tweet);
-        _mockTweetRepo.Setup(repo => repo.LikeTweet(1)).Returns(true);
+        _mockTweetRepo.Setup(repo => repo.GetTweetById(1)).ReturnsAsync(tweet);
+        _mockTweetRepo.Setup(repo => repo.LikeTweet(1)).ReturnsAsync(true);
 
         // Act
-        var result = _tweetService.LikeTweet(1);
+        var result = await _tweetService.LikeTweet(1);
 
         // Assert
         Assert.True(result);
@@ -332,7 +320,7 @@ public class ServiceTests
     }
 
     [Fact]
-    public void UnlikeTweet_DecrementLikesTest()
+    public async Task UnlikeTweet_DecrementLikesTest()
     {
         // Arrange
         var tweet = new Tweet
@@ -343,11 +331,11 @@ public class ServiceTests
             UserId = 1,
         };
 
-        _mockTweetRepo.Setup(repo => repo.GetTweetById(1)).Returns(tweet);
-        _mockTweetRepo.Setup(repo => repo.UnlikeTweet(1)).Returns(true);
+        _mockTweetRepo.Setup(repo => repo.GetTweetById(1)).ReturnsAsync(tweet);
+        _mockTweetRepo.Setup(repo => repo.UnlikeTweet(1)).ReturnsAsync(true);
 
         // Act
-        var result = _tweetService.UnlikeTweet(1);
+        var result = await _tweetService.UnlikeTweet(1);
 
         // Assert
         Assert.True(result);

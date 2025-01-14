@@ -1,4 +1,7 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SocialMedia.API.Data;
 using SocialMedia.API.Hubs;
 using SocialMedia.API.Repo;
@@ -6,7 +9,8 @@ using SocialMedia.API.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//Add dbcontext and connect it to connection string
+//Add dbcontext and connect it to connection string "SocialMedia" or "Azure_SocialMedia" -> if you need my connectionstring just let me know
+// Note about the azure db, it pauses when not and use and takes like 1-2 minutes to spin up the first time you make a connection request so don't panic if nothing happens.
 builder.Services.AddDbContext<SocialMediaContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SocialMedia"))
 );
@@ -46,6 +50,30 @@ builder.Services.AddCors(options =>
     );
 });
 
+//Add Service for Jwt Bearer Auth
+builder
+    .Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters =
+            new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                ValidAudience = builder.Configuration["Jwt:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
+                ),
+            };
+    });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -55,6 +83,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseCors("AllowAll");
 app.UseHttpsRedirection();
 
