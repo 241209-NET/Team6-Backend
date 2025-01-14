@@ -2,13 +2,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SocialMedia.API.Controller;
 
-using SocialMedia.API.DTO;
-using SocialMedia.API.Service;
-using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
+using SocialMedia.API.DTO;
+using SocialMedia.API.Service;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -44,7 +44,6 @@ public class UserController : ControllerBase
     }
 
     // GET: api/User
-    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetAllUsers()
     {
@@ -60,6 +59,7 @@ public class UserController : ControllerBase
     }
 
     // GET: api/User/{id}
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUserById(int id)
     {
@@ -71,6 +71,40 @@ public class UserController : ControllerBase
         catch (ArgumentException ex)
         {
             return NotFound(new { message = ex.Message });
+        }
+    }
+
+    // GET: api/User/current - adding for easy token use, decodes here
+    [Authorize]
+    [HttpGet("current")]
+    public async Task<IActionResult> GetCurrentUser()
+    {
+        try
+        {
+            // Extract the user ID from the JWT claims
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId");
+            if (userIdClaim == null)
+            {
+                return Unauthorized(new { message = "Invalid or missing token." });
+            }
+
+            // Parse the user ID from the claim
+            var userId = int.Parse(userIdClaim.Value);
+
+            // Retrieve the user details using the user ID
+            var user = await _userService.GetUserById(userId)!;
+            return Ok(user);
+        }
+        catch (ArgumentException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(
+                500,
+                new { message = "An unexpected error occurred.", details = ex.Message }
+            );
         }
     }
 
@@ -131,22 +165,21 @@ public class UserController : ControllerBase
             return Unauthorized("Invalid credentials.");
         }
 
-       
-        if(user != null)
+        if (user != null)
         {
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]!),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim("UserId", user.Id.ToString()),
-                new Claim("Username", user.Username!.ToString())
+                new Claim("Username", user.Username!.ToString()),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
             var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var token = new JwtSecurityToken(
                 _configuration["Jwt:Issuer"],
-               _configuration["Jwt:Audience"],
+                _configuration["Jwt:Audience"],
                 claims,
                 expires: DateTime.UtcNow.AddMinutes(60),
                 signingCredentials: signIn
@@ -156,5 +189,4 @@ public class UserController : ControllerBase
         }
         return NoContent();
     }
-
 }
