@@ -46,6 +46,8 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    permissions:
+      id-token: write # Add this permission for Azure OIDC authentication
 
     steps:
       # Step 1: Download the artifact from the build job
