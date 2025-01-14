@@ -1,45 +1,29 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
-
 name: Build and deploy ASP.Net Core app to Azure Web App - live-social-media
-
 on:
   push:
     branches:
       - main
   workflow_dispatch:
-
 jobs:
   build:
     runs-on: windows-latest
-
     steps:
-      # Step 1: Checkout the code from the repository
       - uses: actions/checkout@v4
-
-      # Step 2: Set up .NET Core
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.x'
-
-      # Step 3: Build the project
       - name: Build with dotnet
-        working-directory: SocialMedia.API # Specify the folder containing your app
         run: dotnet build --configuration Release
-
-      # Step 4: Publish the project
       - name: dotnet publish
-        working-directory: SocialMedia.API # Specify the folder containing your app
-        run: dotnet publish -c Release -o ./publish
-
-      # Step 5: Upload the artifact for deployment
+        run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ./SocialMedia.API/publish
-
+          path: ${{env.DOTNET_ROOT}}/myapp
   deploy:
     runs-on: windows-latest
     needs: build
@@ -47,28 +31,23 @@ jobs:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write # Add this permission for Azure OIDC authentication
-
+      id-token: write #This is required for requesting the JWT
     steps:
-      # Step 1: Download the artifact from the build job
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: .net-app
       
-      # Step 2: Login to Azure
       - name: Login to Azure
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_584F89495B7D44168F70FE46ADF9C45F }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_C64449EC94CD46AFA76DD395CE411BD6 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_0FAEBE545F744A589954EC0F5E7FA9DE }}
-
-      # Step 3: Deploy to Azure Web App
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'live-social-media'
           slot-name: 'Production'
-          package: ./SocialMedia.API/publish
+          package: .
