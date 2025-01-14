@@ -221,7 +221,7 @@ var assemblies = [
   {
     "name": "SocialMedia.API",
     "classes": [
-      { "name": "SocialMedia.API.Service.TweetService", "rp": "SocialMedia.API_TweetService.html", "cl": 86, "ucl": 34, "cal": 120, "tl": 206, "cb": 24, "tb": 36, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "SocialMedia.API.Service.TweetService", "rp": "SocialMedia.API_TweetService.html", "cl": 88, "ucl": 34, "cal": 122, "tl": 206, "cb": 24, "tb": 36, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "SocialMedia.API.Service.UserService", "rp": "SocialMedia.API_UserService.html", "cl": 27, "ucl": 0, "cal": 27, "tl": 51, "cb": 6, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
 ];

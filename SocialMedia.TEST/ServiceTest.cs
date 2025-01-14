@@ -12,10 +12,10 @@ public class ServiceTests
 {
     private readonly Mock<IUserRepo> _mockUserRepo = new();
     private readonly Mock<ITweetRepo> _mockTweetRepo = new();
-    private readonly Mock<IHubContext<SocialMediaHub>> _mockHubContext = new();
+    
     private readonly UserService _userService;
     private readonly TweetService _tweetService;
-    private readonly IHubContext<SocialMediaHub> _hubContext;
+    
 
     public ServiceTests()
     {
@@ -23,7 +23,8 @@ public class ServiceTests
         _tweetService = new TweetService(
             _mockTweetRepo.Object,
             _mockUserRepo.Object,
-            _mockHubContext.Object
+            new NoOpHubContext<SocialMediaHub>()
+            
         );
     }
 
