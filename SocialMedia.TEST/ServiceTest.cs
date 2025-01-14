@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.SignalR;
 using Moq;
 using SocialMedia.API.DTO;
 using SocialMedia.API.Hubs;
@@ -12,10 +11,11 @@ public class ServiceTests
 {
     private readonly Mock<IUserRepo> _mockUserRepo = new();
     private readonly Mock<ITweetRepo> _mockTweetRepo = new();
-    
+
     private readonly UserService _userService;
     private readonly TweetService _tweetService;
-       public ServiceTests()
+
+    public ServiceTests()
     {
         _userService = new UserService(_mockUserRepo.Object);
         _tweetService = new TweetService(
@@ -31,51 +31,60 @@ public class ServiceTests
         // Tests for null body
         // Arrange
 
-        var newTweetDto = new TweetInDTO { UserId = 1, ParentId = null, Body = "" };
+        var newTweetDto = new TweetInDTO
+        {
+            UserId = 1,
+            ParentId = null,
+            Body = "",
+        };
         var newTweet = new Tweet
         {
-            UserId = 1, 
-            ParentId = null, 
-            Body = "Hello World"
-            
+            UserId = 1,
+            ParentId = null,
+            Body = "Hello World",
         };
 
-        _mockTweetRepo.Setup(repo => repo.CreateTweet(It.IsAny<Tweet>())).ReturnsAsync(newTweet);        
+        _mockTweetRepo.Setup(repo => repo.CreateTweet(It.IsAny<Tweet>())).ReturnsAsync(newTweet);
 
         // Act
-        var result = await Assert.ThrowsAsync<ArgumentException>(async () => await _tweetService.CreateTweet(newTweetDto));
+        var result = await Assert.ThrowsAsync<ArgumentException>(
+            async () => await _tweetService.CreateTweet(newTweetDto)
+        );
 
         // Assert
-        
+
         Assert.Equal("Tweet body cannot be null or empty.", result.Message);
-        
     }
 
     [Fact]
     public async Task CreateTweetNoParentIdTest()
     {
-        
         // Arrange
 
-        var newTweetDto = new TweetInDTO { UserId = 1, ParentId = 1, Body = "Hello World" };
+        var newTweetDto = new TweetInDTO
+        {
+            UserId = 1,
+            ParentId = 1,
+            Body = "Hello World",
+        };
         var newTweet = new Tweet
         {
-            UserId = 1, 
-            ParentId = 1, 
-            Body = "Hello World"
-            
+            UserId = 1,
+            ParentId = 1,
+            Body = "Hello World",
         };
 
-        _mockTweetRepo.Setup(repo => repo.CreateTweet(It.IsAny<Tweet>())).ReturnsAsync(newTweet);        
+        _mockTweetRepo.Setup(repo => repo.CreateTweet(It.IsAny<Tweet>())).ReturnsAsync(newTweet);
 
         // Act
-        var result = await Assert.ThrowsAsync<ArgumentException>(() => _tweetService.CreateTweet(newTweetDto));
+        var result = await Assert.ThrowsAsync<ArgumentException>(
+            () => _tweetService.CreateTweet(newTweetDto)
+        );
 
         // Assert
-        
+
         Assert.Equal("Parent tweet with ID 1 does not exist.", result.Message);
-        
-    }      
+    }
 
     [Fact]
     public async Task CreateUser_ShouldReturnCreatedUser()
@@ -169,9 +178,8 @@ public class ServiceTests
         var result = await Assert.ThrowsAsync<ArgumentException>(() => _userService.GetUserById(2));
 
         // Assert
-        
+
         Assert.Equal("User with ID 2 not found.", result.Message);
-        
     }
 
     [Fact]
@@ -209,11 +217,13 @@ public class ServiceTests
 
         _mockUserRepo.Setup(repo => repo.GetUserByUsername("testUser")).ReturnsAsync(user);
 
-        var result = await Assert.ThrowsAsync<InvalidOperationException>(() => _userService.GetUserByUsername("someGuy"));
+        var result = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => _userService.GetUserByUsername("someGuy")
+        );
 
         // Assert
-        
-        Assert.Equal("User with username 'someGuy' not found.", result.Message);        
+
+        Assert.Equal("User with username 'someGuy' not found.", result.Message);
     }
 
     [Fact]
@@ -229,11 +239,13 @@ public class ServiceTests
 
         _mockUserRepo.Setup(repo => repo.GetUserByUsername("testUser")).ReturnsAsync(user);
 
-        var result = await Assert.ThrowsAsync<ArgumentException>(() => _userService.GetUserByUsername(null));
+        var result = await Assert.ThrowsAsync<ArgumentException>(
+            () => _userService.GetUserByUsername(null)
+        );
 
         // Assert
-        
-        Assert.Equal("Username cannot be null or empty. (Parameter 'username')", result.Message);        
+
+        Assert.Equal("Username cannot be null or empty. (Parameter 'username')", result.Message);
     }
 
     [Fact]
@@ -323,13 +335,13 @@ public class ServiceTests
         _mockTweetRepo.Setup(repo => repo.GetTweetById(1)).ReturnsAsync(tweet);
 
         // Act
-        var result = await Assert.ThrowsAsync<ArgumentException>(() => _tweetService.GetTweetById(2));
-        
+        var result = await Assert.ThrowsAsync<ArgumentException>(
+            () => _tweetService.GetTweetById(2)
+        );
 
         // Assert
-        
+
         Assert.Equal("Tweet with ID 2 does not exist.", result.Message);
-        
     }
 
     [Fact]
@@ -369,18 +381,18 @@ public class ServiceTests
     public async Task GetAllTweets_NoTweetsTest()
     {
         // Arrange
-        var tweets = new List<Tweet>
-        {};
+        var tweets = new List<Tweet> { };
 
         _mockTweetRepo.Setup(repo => repo.GetAllTweets()).ReturnsAsync(tweets);
 
         // Act
-        var result = await Assert.ThrowsAsync<ArgumentException>(() =>_tweetService.GetAllTweets());
+        var result = await Assert.ThrowsAsync<ArgumentException>(
+            () => _tweetService.GetAllTweets()
+        );
 
         // Assert
-        
+
         Assert.Equal("No tweets found.", result.Message);
-        
     }
 
     [Fact]
@@ -444,7 +456,6 @@ public class ServiceTests
                 Likes = 0,
                 UserId = 1,
             },
-            
         };
 
         _mockTweetRepo.Setup(repo => repo.GetTweetsByUserId(1)).ReturnsAsync(tweets);
@@ -452,12 +463,13 @@ public class ServiceTests
         // Act
         //var result = await Assert.ThrowsAsync<ArgumentException>(() =>_tweetService.GetAllTweets());
 
-        var result = await Assert.ThrowsAsync<ArgumentException>(() => _tweetService.GetTweetsByUserId(-1));
+        var result = await Assert.ThrowsAsync<ArgumentException>(
+            () => _tweetService.GetTweetsByUserId(-1)
+        );
 
         // Assert
-        
+
         Assert.Equal("User ID must be greater than 0.", result.Message);
-        
     }
 
     [Fact]
@@ -480,7 +492,6 @@ public class ServiceTests
                 Likes = 0,
                 UserId = 1,
             },
-            
         };
 
         _mockTweetRepo.Setup(repo => repo.GetTweetsByUserId(1)).ReturnsAsync(tweets);
@@ -488,29 +499,30 @@ public class ServiceTests
         // Act
         //var result = await Assert.ThrowsAsync<ArgumentException>(() =>_tweetService.GetAllTweets());
 
-        var result = await Assert.ThrowsAsync<ArgumentException>(() => _tweetService.GetTweetsByUserId(2));
+        var result = await Assert.ThrowsAsync<ArgumentException>(
+            () => _tweetService.GetTweetsByUserId(2)
+        );
 
         // Assert
-        
+
         Assert.Equal("No tweets found for user with ID 2.", result.Message);
-        
     }
+
     [Fact]
     public async Task GetAllTweetRepliesTest()
     {
         // Arrange
-        
-        var parentTweet = new Tweet 
-            {
-                Id = 1,
-                Body = "Tweet 1",
-                Likes = 0,
-                UserId = 1,
-            };
-        
+
+        var parentTweet = new Tweet
+        {
+            Id = 1,
+            Body = "Tweet 1",
+            Likes = 0,
+            UserId = 1,
+        };
+
         var tweets = new List<Tweet>
         {
-            
             new Tweet
             {
                 Id = 2,
@@ -561,15 +573,16 @@ public class ServiceTests
             Password = "password123",
         };
 
-         _mockTweetRepo.Setup(repo => repo.GetTweetById(1)).ReturnsAsync(tweet);
-         _mockUserRepo.Setup(repo => repo.GetUserById(1)).ReturnsAsync(user);
+        _mockTweetRepo.Setup(repo => repo.GetTweetById(1)).ReturnsAsync(tweet);
+        _mockUserRepo.Setup(repo => repo.GetUserById(1)).ReturnsAsync(user);
 
-         // Act
-        var result = await Assert.ThrowsAsync<ArgumentException>(() => _tweetService.UpdateTweet(1, "New Message"));
+        // Act
+        var result = await Assert.ThrowsAsync<ArgumentException>(
+            () => _tweetService.UpdateTweet(1, "New Message")
+        );
 
         // Assert
-        Assert.Equal("There was a problem with updating the Tweet with ID 1.", result.Message);        
-
+        Assert.Equal("There was a problem with updating the Tweet with ID 1.", result.Message);
     }
 
     [Fact]
@@ -612,7 +625,7 @@ public class ServiceTests
         _mockTweetRepo.Setup(repo => repo.LikeTweet(1)).ReturnsAsync(true);
 
         // Act
-        var result = await Assert.ThrowsAsync<ArgumentException>(() =>_tweetService.LikeTweet(2));
+        var result = await Assert.ThrowsAsync<ArgumentException>(() => _tweetService.LikeTweet(2));
 
         // Assert
         //Assert.True(result);
@@ -661,9 +674,11 @@ public class ServiceTests
         _mockTweetRepo.Setup(repo => repo.UnlikeTweet(1)).ReturnsAsync(true);
 
         // Act
-        var result = await Assert.ThrowsAsync<ArgumentException>(() =>_tweetService.UnlikeTweet(2));
+        var result = await Assert.ThrowsAsync<ArgumentException>(
+            () => _tweetService.UnlikeTweet(2)
+        );
 
-        // Assert        
+        // Assert
 
         Assert.Equal("Tweet with ID 2 does not exist.", result.Message);
     }
@@ -684,9 +699,11 @@ public class ServiceTests
         _mockTweetRepo.Setup(repo => repo.UnlikeTweet(1)).ReturnsAsync(true);
 
         // Act
-        var result = await Assert.ThrowsAsync<InvalidOperationException>(() =>_tweetService.UnlikeTweet(1));
+        var result = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => _tweetService.UnlikeTweet(1)
+        );
 
-        // Assert        
+        // Assert
 
         Assert.Equal("Tweet with ID 1 cannot have less than 0 likes.", result.Message);
     }
