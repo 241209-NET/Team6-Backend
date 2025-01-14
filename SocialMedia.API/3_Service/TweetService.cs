@@ -143,11 +143,7 @@ public class TweetService : ITweetService
         var result = await _tweetRepo.LikeTweet(tweetId);
 
         // Notify clients in real time
-<<<<<<< HEAD
-        //_hubContext.Clients.All.SendAsync("LikeTweet", tweet);
-=======
         await _hubContext.Clients.All.SendAsync("LikeTweet", tweetId);
->>>>>>> 89ca67c0edcce20c79d7354bc4c8f3f84c516e86
 
         return result;
     }
@@ -170,11 +166,7 @@ public class TweetService : ITweetService
         var result = await _tweetRepo.UnlikeTweet(tweetId);
 
         // Notify clients in real time
-<<<<<<< HEAD
-        //_hubContext.Clients.All.SendAsync("UnlikeTweet", tweetId);
-=======
         await _hubContext.Clients.All.SendAsync("UnlikeTweet", tweetId);
->>>>>>> 89ca67c0edcce20c79d7354bc4c8f3f84c516e86
 
         return result;
     }
