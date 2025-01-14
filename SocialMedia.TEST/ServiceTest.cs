@@ -151,10 +151,10 @@ public class ServiceTests
             Password = "password123",
         };
 
-        _mockUserRepo.Setup(repo => repo.GetUserById(1)).ReturnsAsync(user);
+        _mockUserRepo.Setup(repo => repo.GetUserById(1)!).ReturnsAsync(user);
 
         // Act
-        var result = await _userService.GetUserById(1);
+        var result = await _userService.GetUserById(1)!;
 
         // Assert
         Assert.NotNull(result);
@@ -173,9 +173,11 @@ public class ServiceTests
             Password = "password123",
         };
 
-        _mockUserRepo.Setup(repo => repo.GetUserById(1)).ReturnsAsync(user);
+        _mockUserRepo.Setup(repo => repo.GetUserById(1)!).ReturnsAsync(user);
 
-        var result = await Assert.ThrowsAsync<ArgumentException>(() => _userService.GetUserById(2));
+        var result = await Assert.ThrowsAsync<ArgumentException>(
+            () => _userService.GetUserById(2)!
+        );
 
         // Assert
 
@@ -193,10 +195,10 @@ public class ServiceTests
             Password = "password123",
         };
 
-        _mockUserRepo.Setup(repo => repo.GetUserByUsername("testUser")).ReturnsAsync(user);
+        _mockUserRepo.Setup(repo => repo.GetUserByUsername("testUser")!).ReturnsAsync(user);
 
         // Act
-        var result = await _userService.GetUserByUsername("testUser");
+        var result = await _userService.GetUserByUsername("testUser")!;
 
         // Assert
         Assert.NotNull(result);
@@ -215,10 +217,10 @@ public class ServiceTests
             Password = "password123",
         };
 
-        _mockUserRepo.Setup(repo => repo.GetUserByUsername("testUser")).ReturnsAsync(user);
+        _mockUserRepo.Setup(repo => repo.GetUserByUsername("testUser")!).ReturnsAsync(user);
 
         var result = await Assert.ThrowsAsync<InvalidOperationException>(
-            () => _userService.GetUserByUsername("someGuy")
+            () => _userService.GetUserByUsername("someGuy")!
         );
 
         // Assert
@@ -237,10 +239,10 @@ public class ServiceTests
             Password = "password123",
         };
 
-        _mockUserRepo.Setup(repo => repo.GetUserByUsername("testUser")).ReturnsAsync(user);
+        _mockUserRepo.Setup(repo => repo.GetUserByUsername("testUser")!).ReturnsAsync(user);
 
         var result = await Assert.ThrowsAsync<ArgumentException>(
-            () => _userService.GetUserByUsername(null)
+            () => _userService.GetUserByUsername(null!)!
         );
 
         // Assert
@@ -259,10 +261,10 @@ public class ServiceTests
             Password = "password123",
         };
 
-        _mockUserRepo.Setup(repo => repo.DeleteUserById(1)).ReturnsAsync(user);
+        _mockUserRepo.Setup(repo => repo.DeleteUserById(1)!).ReturnsAsync(user);
 
         // Act
-        var result = await _userService.DeleteUserById(1);
+        var result = await _userService.DeleteUserById(1)!;
 
         // Assert
         Assert.NotNull(result);
@@ -309,7 +311,7 @@ public class ServiceTests
             UserId = 1,
         };
 
-        _mockTweetRepo.Setup(repo => repo.GetTweetById(1)).ReturnsAsync(tweet);
+        _mockTweetRepo.Setup(repo => repo.GetTweetById(1)!).ReturnsAsync(tweet);
 
         // Act
         var result = await _tweetService.GetTweetById(1);
@@ -332,7 +334,7 @@ public class ServiceTests
             UserId = 1,
         };
 
-        _mockTweetRepo.Setup(repo => repo.GetTweetById(1)).ReturnsAsync(tweet);
+        _mockTweetRepo.Setup(repo => repo.GetTweetById(1)!).ReturnsAsync(tweet);
 
         // Act
         var result = await Assert.ThrowsAsync<ArgumentException>(
@@ -541,7 +543,7 @@ public class ServiceTests
             },
         };
 
-        _mockTweetRepo.Setup(repo => repo.GetTweetById(1)).ReturnsAsync(parentTweet);
+        _mockTweetRepo.Setup(repo => repo.GetTweetById(1)!).ReturnsAsync(parentTweet);
         _mockTweetRepo.Setup(repo => repo.GetRepliesForTweet(1)).ReturnsAsync(tweets);
 
         // Act
@@ -573,8 +575,8 @@ public class ServiceTests
             Password = "password123",
         };
 
-        _mockTweetRepo.Setup(repo => repo.GetTweetById(1)).ReturnsAsync(tweet);
-        _mockUserRepo.Setup(repo => repo.GetUserById(1)).ReturnsAsync(user);
+        _mockTweetRepo.Setup(repo => repo.GetTweetById(1)!).ReturnsAsync(tweet);
+        _mockUserRepo.Setup(repo => repo.GetUserById(1)!).ReturnsAsync(user);
 
         // Act
         var result = await Assert.ThrowsAsync<ArgumentException>(
@@ -597,7 +599,7 @@ public class ServiceTests
             UserId = 1,
         };
 
-        _mockTweetRepo.Setup(repo => repo.GetTweetById(1)).ReturnsAsync(tweet);
+        _mockTweetRepo.Setup(repo => repo.GetTweetById(1)!).ReturnsAsync(tweet);
         _mockTweetRepo.Setup(repo => repo.LikeTweet(1)).ReturnsAsync(true);
 
         // Act
@@ -621,7 +623,7 @@ public class ServiceTests
             UserId = 1,
         };
 
-        _mockTweetRepo.Setup(repo => repo.GetTweetById(1)).ReturnsAsync(tweet);
+        _mockTweetRepo.Setup(repo => repo.GetTweetById(1)!).ReturnsAsync(tweet);
         _mockTweetRepo.Setup(repo => repo.LikeTweet(1)).ReturnsAsync(true);
 
         // Act
@@ -646,7 +648,7 @@ public class ServiceTests
             UserId = 1,
         };
 
-        _mockTweetRepo.Setup(repo => repo.GetTweetById(1)).ReturnsAsync(tweet);
+        _mockTweetRepo.Setup(repo => repo.GetTweetById(1)!).ReturnsAsync(tweet);
         _mockTweetRepo.Setup(repo => repo.UnlikeTweet(1)).ReturnsAsync(true);
 
         // Act
@@ -670,7 +672,7 @@ public class ServiceTests
             UserId = 1,
         };
 
-        _mockTweetRepo.Setup(repo => repo.GetTweetById(1)).ReturnsAsync(tweet);
+        _mockTweetRepo.Setup(repo => repo.GetTweetById(1)!).ReturnsAsync(tweet);
         _mockTweetRepo.Setup(repo => repo.UnlikeTweet(1)).ReturnsAsync(true);
 
         // Act
@@ -695,7 +697,7 @@ public class ServiceTests
             UserId = 1,
         };
 
-        _mockTweetRepo.Setup(repo => repo.GetTweetById(1)).ReturnsAsync(tweet);
+        _mockTweetRepo.Setup(repo => repo.GetTweetById(1)!).ReturnsAsync(tweet);
         _mockTweetRepo.Setup(repo => repo.UnlikeTweet(1)).ReturnsAsync(true);
 
         // Act
