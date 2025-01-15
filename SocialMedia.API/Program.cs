@@ -42,7 +42,10 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy
-                .WithOrigins("http://localhost:5173") // specify your React dev origin
+                .WithOrigins(
+                    "http://localhost:5173",
+                    "https://white-island-0a58c890f.4.azurestaticapps.net"
+                ) // specify your React dev origin
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials(); // allow credentials
