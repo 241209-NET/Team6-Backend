@@ -179,6 +179,15 @@ public class TweetService : ITweetService
             throw new ArgumentException($"Tweet with ID {tweetId} does not exist.");
         }
 
+        // Fetch all child tweets (replies)
+        var childTweets = await _tweetRepo.GetRepliesForTweet(tweetId);
+
+        // Recursively delete each child tweet
+        foreach (var childTweet in childTweets)
+        {
+            await DeleteTweet(childTweet.Id); // Recursive call to delete child
+        }
+
         var result = await _tweetRepo.DeleteTweet(tweetId)!;
 
         // Notify clients in real time
